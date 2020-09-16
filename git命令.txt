@@ -1,0 +1,90 @@
+删除文件：
+          文件在工作区
+
+          git checkout -- 目的文件  (表示放弃修改目的文件,因为修改的文件还在本地的工作区，没到暂存区所以可以用暂存区的文件夹替代工作区的文件) 
+
+	  文件在暂存区
+
+	  git status      (查看一下git状态确认一下文件的状态)
+
+	  git reset HEAD 目的文件   (表示修改后的文件已经用git add 目的文件放到了暂存区了，但在git commit -m '注释' 放到版本库之前发现了，可以用git reset HADE 目的文件 (即是用版本库里最新版本来将暂存区的文件修改回退到工作区，这时git的状态是是干净的) 
+
+	  文件在版本库；  (文件经过一系列的git add 目的文件 、 git commit -m '注释'到达了版本库了)
+
+	  git log         (查看文件提交的日志参数 --pretty=online，可以只显示版本号(commit ID)和注释)
+
+	  git reset --head HEAD^ / git reset --head 版本号 (HEAD^表示上一个版本号，HEAD^^表示上上一个版本号，也可以用HEAD~数字表示回退到第几个版本)
+
+	  文件在远程库
+
+删除远程仓库中的某个文件
+
+    情况一； 刚到远程库(经过git add 目的文件 、 git commit -m '注释'、git remote add origin URL、git push后发现有问题需要删除)
+
+           ；在本地终端上误传文件，本地master不变(这是及时删除，因为上传不久建立与远程仓库的链接还有用） 
+            所以有以下操作：在终端上误传的文件家的位置输入指令，将远程仓库里面的项目拉下来
+	    git pull origin master
+
+	    git rm -r --cached 目的文件
+
+	    git commit -m '注释'
+
+	    git push
+
+    情况二：这是上传很久了，本地文件都不存在了，本地git库和master都不在了
+            操作：位置随便，从github远程仓库中克隆我们需要的操作的远程仓库
+	    git clone url (目的库的url)
+
+	    cd 目的库     (因为克隆下来的目的库包含目的文件，master是已经存在了的，因为克隆，所以这个master就已经与远程建立了连接)
+
+	    git rm -r -cached 目的文件
+
+	    git commit -m '注释'
+
+	    git push
+
+连接远程库；
+            位置；选择目的目录即本地的git库
+            
+	    git init 创建本地的目的git库 
+
+            git add 目的文件
+
+	    git commit -m '注释'             （上传到本地的git库中）
+
+	    git remote add origin url         (当前目录建立与远程库的连接）
+
+	    git push / git push origin master (推送到远程库）
+
+创建与合并分支；
+
+                在这里switch 和 checkout 是一样的 但git checkout -- 目的文件 (表示把工作区的文件放弃修改并返回上个版本，这时的文件已经用git add 文件添加过了，但还没 git commit -m '注释'提交到暂存区)
+                git switch -c dev  可以与git checkout -b dev 互换都是表示创建并切换分支 
+
+                git checkout -b dev (创建dev分支，然后切换到dev分支) 相当于git branch dev (创建分支)  git checkout dev (切换分支)
+
+		git branch          (查看所有分支，当前分支前面会有一个*号）
+
+		git add 文件
+
+		git commit -m '注释'
+
+		git checkout master (切换分支） git switch master 也表示切换到master分支
+
+		git merge dev       (把dev分支的工作成果合并到master分支上）
+
+		git merge --no --ff -m '注释' （合并分支并不删除分支）
+
+		git branch -d dev   (参数d删除已经合并的分支，参数D删除未合并的分支）
+
+		git log --graph --prett=onelie --abbrev-commit (查看分支的合并情况)
+
+		当在合并分支是发现dev 和 master 分支都有修改提交到版本各自的库中，即产生了冲突。(这时可以用git branch查看分支，就会发现已经分支已经切换到master上了)
+
+		可以用编辑器重新修改文件再进行以下操作；
+
+		git add 最终文件
+
+		git commit -m '注释'
+
+                git log --graph --prett=onelie --abbrev-commit (查看分支的合并情况)
